@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lavender Scare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:    #1a1714;
+  --ink2:   #3c3830;
+  --ink3:   #7a7268;
+  --paper:  #faf8f3;
+  --paper2: #f3efe7;
+  --paper3: #eae4d8;
+  --rule:   #d8d0c4;
+  --red:    #8b2635;
+  --red-lt: #fdf0f1;
+  --gold:   #a67c1a;
+  --gold-lt:#fdf6e3;
+  --green:  #2d5a3d;
+  --green-lt:#eaf3ee;
+  --serif:  'Cormorant Garamond', Georgia, serif;
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --mono:   'DM Mono', monospace;
+}
+html { font-size: 16px; background: var(--paper); color: var(--ink); scroll-behavior: smooth; }
+body { font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
+
+/* PROGRESS */
+#prog { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--red); z-index: 999; transition: width .08s linear; }
+
+/* REVEAL */
+.fade { opacity: 0; transform: translateY(20px); transition: opacity .75s ease, transform .75s ease; }
+.fade.in { opacity: 1; transform: none; }
+.fade.d1 { transition-delay: .1s; }
+.fade.d2 { transition-delay: .2s; }
+.fade.d3 { transition-delay: .3s; }
+.fade.d4 { transition-delay: .4s; }
+
+/* ── HERO ─────────────────────────────────────────────────────────── */
+.hero {
+  background: var(--ink);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+.hero-left {
+  padding: 80px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(255,255,255,.07);
+  position: relative;
+  z-index: 1;
+}
+.hero-right {
+  padding: 80px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.28);
+  margin-bottom: 32px;
+  animation: hf .9s .1s both;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 6.5vw, 84px);
+  font-weight: 500;
+  line-height: .96;
+  letter-spacing: -.025em;
+  color: #fff;
+  animation: hf .9s .25s both;
+}
+.hero h1 em { font-style: italic; color: #c97878; display: block; margin-top: 4px; }
+.hero-deck {
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-style: italic;
+  color: rgba(255,255,255,.4);
+  line-height: 1.6;
+  margin-top: 32px;
+  max-width: 400px;
+  animation: hf .9s .4s both;
+}
+.hero-rule {
+  width: 1px;
+  background: rgba(255,255,255,.1);
+  align-self: stretch;
+  margin-bottom: 40px;
+  transform-origin: top;
+  animation: scy 1.2s .5s both cubic-bezier(.16,1,.3,1);
+}
+@keyframes scy { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.hero-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.07);
+  animation: hf .9s .65s both;
+}
+.hero-stat { background: var(--ink); padding: 28px 24px; }
+.hero-stat-num {
+  font-family: var(--serif);
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 600;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.hero-stat-num span { color: #c97878; }
+.hero-stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.26);
+  line-height: 1.5;
+}
+@keyframes hf { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ── SHARED SECTION ───────────────────────────────────────────────── */
+.section { padding: 96px 80px; max-width: 1100px; margin: 0 auto; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--rule); }
+.section-heading {
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.5vw, 54px);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.section-heading em { font-style: italic; color: var(--red); }
+.section-intro {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-style: italic;
+  color: var(--ink3);
+  line-height: 1.65;
+  max-width: 520px;
+  margin-bottom: 60px;
+}
+
+/* ── LOOP SECTION ─────────────────────────────────────────────────── */
+.loop-bg {
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+@keyframes drift {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%      { transform: translate(-50%,-50%) scale(1.1); }
+}
+.loop-bg::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,38,53,.07) 0%, transparent 70%);
+  animation: drift 14s ease-in-out infinite;
+  pointer-events: none;
+}
+.loop-section {
+  padding: 96px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.loop-bg .eyebrow { color: rgba(255,255,255,.28); }
+.loop-bg .eyebrow::before { background: rgba(255,255,255,.12); }
+.loop-bg .section-heading { color: #fff; }
+.loop-bg .section-intro { color: rgba(255,255,255,.38); }
+
+.loop-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.ring-spin { transform-origin: 200px 200px; animation: spin 40s linear infinite; }
+.ring-spin-r { transform-origin: 200px 200px; animation: spin 28s linear infinite reverse; }
+
+.loop-steps { display: flex; flex-direction: column; gap: 4px; }
+.loop-step {
+  padding: 20px 24px;
+  border-left: 2px solid transparent;
+  border-radius: 0 4px 4px 0;
+  transition: border-color .3s, background .3s;
+}
+.loop-step:hover { background: rgba(255,255,255,.04); border-left-color: rgba(255,255,255,.14); }
+.loop-step.is-red  { border-left-color: rgba(139,38,53,.45); }
+.loop-step.is-gold { border-left-color: rgba(166,124,26,.45); }
+.step-num { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.22); margin-bottom: 6px; }
+.step-title { font-family: var(--serif); font-size: 18px; font-weight: 500; color: #fff; margin-bottom: 6px; line-height: 1.2; }
+.step-body { font-family: var(--sans); font-size: 13.5px; color: rgba(255,255,255,.4); line-height: 1.65; }
+
+/* ── QUOTE ────────────────────────────────────────────────────────── */
+.quote-bg { background: var(--paper2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.quote-section { padding: 96px 80px; max-width: 860px; margin: 0 auto; }
+.quote-mark {
+  font-family: var(--serif);
+  font-size: 90px;
+  line-height: .8;
+  color: var(--red);
+  opacity: .22;
+  user-select: none;
+  margin-bottom: 8px;
+}
+.quote-text {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.8vw, 31px);
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.45;
+  margin-bottom: 20px;
+}
+.quote-attr { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; color: var(--ink3); margin-bottom: 32px; }
+.quote-note {
+  font-size: 14.5px;
+  color: var(--ink2);
+  line-height: 1.75;
+  padding-left: 20px;
+  border-left: 2px solid var(--gold);
+  max-width: 600px;
+}
+
+/* ── TIMELINE ─────────────────────────────────────────────────────── */
+.tl-outer { position: relative; }
+.tl-spine {
+  position: absolute;
+  left: 119px; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--rule);
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1.3s cubic-bezier(.16,1,.3,1);
+}
+.tl-spine.in { transform: scaleY(1); }
+
+.tl-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0 36px;
+  align-items: start;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+.tl-row:last-child { border-bottom: none; }
+
+.tl-left { text-align: right; padding-right: 12px; position: relative; padding-top: 3px; }
+.tl-date { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink3); line-height: 1.4; }
+.tl-dot {
+  position: absolute;
+  right: -6px; top: 6px;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--rule);
+  transition: transform .3s;
+}
+.tl-row:hover .tl-dot { transform: scale(1.35); }
+.tl-dot.red   { background: var(--red);   box-shadow: 0 0 0 1px var(--red); }
+.tl-dot.green { background: var(--green); box-shadow: 0 0 0 1px var(--green); }
+
+.tl-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+.tl-tag.p { background: var(--red-lt);   color: var(--red); }
+.tl-tag.r { background: var(--green-lt); color: var(--green); }
+
+.tl-title { font-family: var(--serif); font-size: 21px; font-weight: 500; color: var(--ink); line-height: 1.2; margin-bottom: 10px; }
+.tl-body { font-size: 14px; color: var(--ink2); line-height: 1.75; }
+.tl-body strong { color: var(--ink); font-weight: 500; }
+.tl-body em { font-style: italic; }
+
+/* ── CARDS ────────────────────────────────────────────────────────── */
+.cards-bg { background: var(--paper2); }
+.cards-section { padding: 96px 80px; max-width: 1100px; margin: 0 auto; }
+.cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 52px; }
+.card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 32px 32px 28px;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,0,0,.06); }
+.card-bar { width: 28px; height: 3px; border-radius: 2px; margin-bottom: 20px; }
+.card-bar.red   { background: var(--red); }
+.card-bar.green { background: var(--green); }
+.card h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--ink); margin-bottom: 14px; line-height: 1.2; }
+.card p  { font-size: 14px; color: var(--ink2); line-height: 1.75; }
+
+/* ── FOOTER ───────────────────────────────────────────────────────── */
+.site-footer {
+  padding: 36px 80px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-left  { font-family: var(--serif); font-size: 15px; font-style: italic; color: var(--ink3); }
+.footer-right { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; color: var(--ink3); text-align: right; }
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-left { padding: 56px 32px; }
+  .section, .loop-section, .quote-section, .cards-section { padding: 72px 32px; }
+  .loop-layout { grid-template-columns: 1fr; gap: 48px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .tl-row { grid-template-columns: 88px 1fr; gap: 0 20px; }
+  .tl-spine { left: 87px; }
+  .site-footer { padding: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div>
+      <p class="hero-eyebrow">United States &nbsp;·&nbsp; 1947 – 1969</p>
+      <h1>The<br>Lavender<br>Scare:<br><em>A Self-Defeating<br>Machine</em></h1>
+      <p class="hero-deck">How Executive Order 10450 transformed the closet from social norm into federal law and produced the resistance that would challenge it.</p>
+    </div>
+    <div></div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-rule"></div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num"><span>5,000</span>+</div>
+        <div class="hero-stat-label">Federal employees<br>dismissed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1953</div>
+        <div class="hero-stat-label">Year EO 10450<br>was signed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num"><span>0</span></div>
+        <div class="hero-stat-label">Terms defined<br>in the order</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">16 <span style="font-size:.5em;color:rgba(255,255,255,.35)">yrs</span></div>
+        <div class="hero-stat-label">EO 10450<br>to Stonewall</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOOP -->
+<div class="loop-bg">
+<div class="loop-section">
+  <p class="eyebrow fade">The mechanism</p>
+  <h2 class="section-heading fade d1">A loop with no exit</h2>
+  <p class="section-intro fade d2">EO 10450's national security rationale was circular. The state manufactured the very vulnerability it claimed to prevent.</p>
+
+  <div class="loop-layout">
+    <div class="fade d2">
+    <svg viewBox="0 0 400 400" width="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <marker id="mr" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 2L8 5L2 8" fill="none" stroke="rgba(139,38,53,.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <marker id="mw" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 2L8 5L2 8" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- outer spinning ring -->
+      <g class="ring-spin">
+        <circle cx="200" cy="200" r="158" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="1" stroke-dasharray="5 9"/>
+      </g>
+      <!-- inner counter ring -->
+      <g class="ring-spin-r">
+        <circle cx="200" cy="200" r="68" fill="none" stroke="rgba(166,124,26,.15)" stroke-width="1" stroke-dasharray="3 7"/>
+      </g>
+      <!-- center text -->
+      <text font-family="'Cormorant Garamond',serif" font-style="italic" font-size="12.5" fill="rgba(166,124,26,.65)" text-anchor="middle" x="200" y="196">circular</text>
+      <text font-family="'Cormorant Garamond',serif" font-style="italic" font-size="12.5" fill="rgba(166,124,26,.65)" text-anchor="middle" x="200" y="213">logic</text>
+      <!-- arcs -->
+      <path d="M 272 96 A 148 148 0 0 1 344 238" fill="none" stroke="rgba(139,38,53,.48)" stroke-width="1.5" marker-end="url(#mr)"/>
+      <path d="M 330 270 A 148 148 0 0 1 186 350" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5" marker-end="url(#mw)"/>
+      <path d="M 120 346 A 148 148 0 0 1 54 202" fill="none" stroke="rgba(139,38,53,.48)" stroke-width="1.5" marker-end="url(#mr)"/>
+      <path d="M 58 168 A 148 148 0 0 1 200 50" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="1.5" marker-end="url(#mw)"/>
+      <!-- TOP node -->
+      <rect x="138" y="22" width="124" height="56" rx="4" fill="rgba(139,38,53,.18)" stroke="rgba(139,38,53,.42)" stroke-width="1"/>
+      <text font-family="'DM Mono',monospace" font-size="8.5" fill="rgba(201,112,112,.75)" text-anchor="middle" letter-spacing="1" x="200" y="44">EO 10450</text>
+      <text font-family="'Cormorant Garamond',serif" font-size="14.5" font-weight="500" fill="rgba(255,255,255,.9)" text-anchor="middle" x="200" y="64">Persecution</text>
+      <!-- RIGHT node -->
+      <rect x="312" y="158" width="82" height="50" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.09)" stroke-width="1"/>
+      <text font-family="'DM Mono',monospace" font-size="7.5" fill="rgba(255,255,255,.26)" text-anchor="middle" x="353" y="179">Rationale</text>
+      <text font-family="'Cormorant Garamond',serif" font-size="14.5" fill="rgba(255,255,255,.8)" text-anchor="middle" x="353" y="198">Blackmail</text>
+      <!-- BOTTOM node -->
+      <rect x="130" y="322" width="140" height="56" rx="4" fill="rgba(139,38,53,.14)" stroke="rgba(139,38,53,.32)" stroke-width="1"/>
+      <text font-family="'DM Mono',monospace" font-size="8.5" fill="rgba(201,112,112,.65)" text-anchor="middle" letter-spacing="1" x="200" y="343">5,000+ fired</text>
+      <text font-family="'Cormorant Garamond',serif" font-size="14.5" font-weight="500" fill="rgba(255,255,255,.9)" text-anchor="middle" x="200" y="364">Closet enforced</text>
+      <!-- LEFT node -->
+      <rect x="6" y="158" width="90" height="50" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.09)" stroke-width="1"/>
+      <text font-family="'DM Mono',monospace" font-size="7.5" fill="rgba(255,255,255,.26)" text-anchor="middle" x="51" y="179">Justifies</text>
+      <text font-family="'Cormorant Garamond',serif" font-size="14.5" fill="rgba(255,255,255,.8)" text-anchor="middle" x="51" y="198">EO 10450</text>
+    </svg>
+    </div>
+
+    <div class="loop-steps">
+      <div class="loop-step is-red fade d1">
+        <div class="step-num">Step 01</div>
+        <div class="step-title">EO 10450 is signed</div>
+        <div class="step-body">"Sexual perversion", deliberately left undefined, becomes grounds for federal dismissal. Vague criteria give investigators total discretionary power over identity, not conduct.</div>
+      </div>
+      <div class="loop-step fade d2">
+        <div class="step-num">Step 02</div>
+        <div class="step-title">The blackmail argument</div>
+        <div class="step-body">The government claims gay employees are uniquely vulnerable to Soviet coercion. This is offered as the national security justification for the order, but the vulnerability only exists because the order does.</div>
+      </div>
+      <div class="loop-step is-red fade d3">
+        <div class="step-num">Step 03</div>
+        <div class="step-title">The closet is enforced</div>
+        <div class="step-body">Over 5,000 federal workers are dismissed. The closet, which is producing the blackmail risk, is manufactured and maintained by the very policy claiming to respond to it.</div>
+      </div>
+      <div class="loop-step is-gold fade d4">
+        <div class="step-num">The flaw</div>
+        <div class="step-title">The loop collapses</div>
+        <div class="step-body">Remove the persecution and the blackmail leverage disappears entirely. The state was not responding to a pre-existing threat. It was creating one. And calling that creation justification.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-bg">
+<div class="quote-section">
+  <div class="quote-mark fade">"</div>
+  <p class="quote-text fade d1">Employees could be a security risk... it may be that their personal habits are such that they might be subject to blackmail by people who seek to destroy the safety of our country.</p>
+  <p class="quote-attr fade d2">— Executive Order 10450 rationale, April 1953</p>
+  <div class="quote-note fade d3">The order manufactured the very condition it cited as justification. Senators and investigators understood this circularity and proceeded regardless. The blackmail rationale was not a sincere security analysis, but bureaucratic language that converted prejudice into national security policy.</div>
+</div>
+</div>
+
+<!-- TIMELINE -->
+<div class="section">
+  <p class="eyebrow fade">1947 – 1969</p>
+  <h2 class="section-heading fade d1">Persecution &amp; <em>Resistance</em></h2>
+  <p class="section-intro fade d2">Every act of state persecution produced a corresponding act of resistance. The machine that enforced the closet also forged the movement.</p>
+
+  <div class="tl-outer fade d2">
+    <div class="tl-spine"></div>
+
+    <div class="tl-row fade">
+      <div class="tl-left"><span class="tl-date">1947</span><div class="tl-dot red"></div></div>
+      <div>
+        <span class="tl-tag p">Persecution</span>
+        <div class="tl-title">Executive Order 9835</div>
+        <div class="tl-body">Truman's Federal Employee Loyalty Program establishes the first formal mechanism for investigating personal conduct. Sexual "deviancy" appears alongside communist sympathy as a disqualifying category. This lays the bureaucratic template EO 10450 would formalize.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade d1">
+      <div class="tl-left"><span class="tl-date">1950</span><div class="tl-dot red"></div></div>
+      <div>
+        <span class="tl-tag p">Persecution</span>
+        <div class="tl-title">The Senate Report</div>
+        <div class="tl-body">A Senate subcommittee publishes <em>Employment of Homosexuals and Other Sex Perverts in Government</em>, formally establishing the blackmail argument. The circular logic is made explicit: gay employees can be blackmailed, but only because the government fires them for being gay.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade">
+      <div class="tl-left"><span class="tl-date">April<br>1953</span><div class="tl-dot red"></div></div>
+      <div>
+        <span class="tl-tag p">Persecution</span>
+        <div class="tl-title">Executive Order 10450 Signed</div>
+        <div class="tl-body">Eisenhower formally adds <strong>"sexual perversion"</strong>,  left undefined on purpose, to federal disqualification criteria. The vagueness is structural and intentional. Undefined terms grant investigators total discretionary power over identity. The closet is no longer a social norm. It is <strong>federal law</strong>.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade d1">
+      <div class="tl-left"><span class="tl-date">1953<br>– 1956</span><div class="tl-dot red"></div></div>
+      <div>
+        <span class="tl-tag p">Persecution</span>
+        <div class="tl-title">Mass Dismissals</div>
+        <div class="tl-body">Over <strong>5,000 federal employees</strong> are dismissed, exceeding those removed for suspected communist sympathies in the same period. Class shapes survival: senior officials negotiate quiet exits; lower-ranked workers are blacklisted through Civil Service Commission "derogatory information" files shared with private employers.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade">
+      <div class="tl-left"><span class="tl-date">1953</span><div class="tl-dot green"></div></div>
+      <div>
+        <span class="tl-tag r">Resistance</span>
+        <div class="tl-title">ONE Magazine Founded</div>
+        <div class="tl-body">The first nationally distributed gay publication begins in Los Angeles. Where federal language defined gay Americans as perverts, ONE addressed its readers as <strong>citizens with rights and dignity</strong>, which was a direct contest over who controls the terms of identity.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade d1">
+      <div class="tl-left"><span class="tl-date">1957</span><div class="tl-dot red"></div></div>
+      <div>
+        <span class="tl-tag p">Persecution</span>
+        <div class="tl-title">Frank Kameny Fired</div>
+        <div class="tl-body">Army Map Service astronomer Frank Kameny is dismissed after investigators discover he is gay. Unlike most who accepted dismissal quietly, Kameny refuses the government's framing. This was the beginning the homophile movement's shift from accommodation to organized, principled resistance.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade">
+      <div class="tl-left"><span class="tl-date">1958</span><div class="tl-dot green"></div></div>
+      <div>
+        <span class="tl-tag r">Resistance</span>
+        <div class="tl-title">ONE, Inc. v. Olesen</div>
+        <div class="tl-body">The Supreme Court rules for ONE Magazine after the Post Office attempts to ban it as obscene. The <strong>first Supreme Court victory for gay rights</strong> in American history, affirming the community's right to name itself on its own terms.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade d1">
+      <div class="tl-left"><span class="tl-date">1961</span><div class="tl-dot green"></div></div>
+      <div>
+        <span class="tl-tag r">Resistance</span>
+        <div class="tl-title">Kameny's Petition</div>
+        <div class="tl-body">Kameny files the <strong>first constitutional challenge</strong> to a federal gay dismissal. He does not invoke sympathy. But he argues that sexual orientation is legally irrelevant to employment fitness. A theory of equality a full decade ahead of mainstream legal opinion. The Court declines. The argument is on record.</div>
+      </div>
+    </div>
+
+    <div class="tl-row fade">
+      <div class="tl-left"><span class="tl-date">June 28,<br>1969</span><div class="tl-dot green"></div></div>
+      <div>
+        <span class="tl-tag r">Resistance</span>
+        <div class="tl-title">Stonewall</div>
+        <div class="tl-body">Police raid the Stonewall Inn in Greenwich Village. The community fights back for several nights. The uprising did not emerge from nowhere. It was built on two decades of legal challenges, community publications, and political consciousness forged under Lavender Scare persecution. <strong>The road to Stonewall ran through the interrogation rooms of the Civil Service Commission.</strong></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CARDS -->
+<div class="cards-bg">
+<div class="cards-section">
+  <p class="eyebrow fade">Two sides</p>
+  <h2 class="section-heading fade d1">The same <em>apparatus</em></h2>
+  <div class="cards-grid">
+    <div class="card fade d2">
+      <div class="card-bar red"></div>
+      <h3>The mechanism of persecution</h3>
+      <p>EO 10450 left "sexual perversion" undefined, an structural choice granting investigators total discretionary power over identity, not conduct. Employees had to prove not just innocence but that their employment was "clearly consistent with national security." An unfalsifiable standard no one could meet. The closet was enforced not by social pressure alone but by the machinery of federal law.</p>
+    </div>
+    <div class="card fade d3">
+      <div class="card-bar green"></div>
+      <h3>The mechanism of resistance</h3>
+      <p>Kameny's petition refused the government's framing entirely. This was a constitutional rights claim, a decade ahead of its time. ONE Magazine's editorial decisions claimed the same discursive ground: gay Americans as citizens, and not perverts. Both were interventions in the contest over language that EO 10450 had opened. Persecution did not prevent resistance. It produced it.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer class="site-footer">
+  <span class="footer-left">The Lavender Scare, 1947 – 1969</span>
+  <span class="footer-right">Sources: Johnson (2004) &nbsp;·&nbsp; EO 10450 (1953) &nbsp;·&nbsp; Kameny v. Brucker (1961) &nbsp;·&nbsp; ONE Magazine &nbsp;·&nbsp; Duberman (1993)</span>
+</footer>
+
+<script>
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  prog.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+}, { passive: true });
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in');
+    if (e.target.classList.contains('tl-outer')) {
+      document.querySelector('.tl-spine').classList.add('in');
+    }
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
+
+document.querySelectorAll('.fade').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
