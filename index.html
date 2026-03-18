@@ -55,7 +55,6 @@ body { font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid rgba(255,255,255,.07);
   position: relative;
   z-index: 1;
 }
@@ -63,7 +62,8 @@ body { font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
   padding: 80px 64px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 0;
   position: relative;
   z-index: 1;
 }
@@ -98,8 +98,9 @@ body { font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
 }
 .hero-rule {
   width: 1px;
+  height: 100px;
   background: rgba(255,255,255,.1);
-  align-self: stretch;
+  align-self: flex-start;
   margin-bottom: 40px;
   transform-origin: top;
   animation: scy 1.2s .5s both cubic-bezier(.16,1,.3,1);
@@ -255,6 +256,52 @@ body { font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
   max-width: 600px;
 }
 
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: hf 1s 1.4s both;
+  z-index: 10;
+  cursor: pointer;
+  transition: opacity .5s ease;
+}
+.scroll-indicator.hidden { opacity: 0; pointer-events: none; }
+.scroll-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+.scroll-mouse {
+  width: 22px;
+  height: 34px;
+  border: 1px solid rgba(255,255,255,.45);
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 6px;
+}
+@keyframes scrollDot {
+  0%   { opacity: 1;  transform: translateY(0); }
+  55%  { opacity: 0;  transform: translateY(10px); }
+  56%  { opacity: 0;  transform: translateY(0); }
+  100% { opacity: 1;  transform: translateY(0); }
+}
+.scroll-dot {
+  width: 3px;
+  height: 6px;
+  background: rgba(255,255,255,.7);
+  border-radius: 2px;
+  animation: scrollDot 1.9s ease-in-out infinite;
+}
+
 /* ── TIMELINE ─────────────────────────────────────────────────────── */
 .tl-outer { position: relative; }
 .tl-spine {
@@ -392,6 +439,10 @@ body { font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
       </div>
     </div>
   </div>
+  <div class="scroll-indicator" id="scrollHint" onclick="window.scrollBy({top: window.innerHeight, behavior:'smooth'})">
+  <span class="scroll-label">scroll</span>
+  <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+</div>
 </div>
 
 <!-- LOOP -->
@@ -606,6 +657,13 @@ const prog = document.getElementById('prog');
 window.addEventListener('scroll', () => {
   const d = document.documentElement;
   prog.style.width = (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+}, { passive: true });
+
+const scrollHint = document.getElementById('scrollHint');
+window.addEventListener('scroll', () => {
+  if (document.documentElement.scrollTop > 80) {
+    scrollHint.classList.add('hidden');
+  }
 }, { passive: true });
 
 const io = new IntersectionObserver(entries => {
